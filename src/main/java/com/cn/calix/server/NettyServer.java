@@ -34,7 +34,7 @@ public class NettyServer  {
 
     @PostConstruct
     public void start(){
-        logger.info("Netty Server start");
+        logger.info("Netty Server start111");
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
