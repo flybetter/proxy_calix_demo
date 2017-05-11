@@ -1,4 +1,4 @@
-package com.cn.calix;
+package com.cn.calix.web.controller;
 
 import com.cn.proxy.server.ana.process.proxy.ANAProxyService;
 import org.apache.log4j.Logger;
