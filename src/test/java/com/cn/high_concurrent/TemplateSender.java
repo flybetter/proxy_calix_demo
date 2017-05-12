@@ -102,15 +102,15 @@ public class TemplateSender {
 //        }
 
 
-        Runnable runnable=()->{
-            System.out.println("111");
-        };
+//        Runnable runnable=()->{
+//            System.out.println("111");
+//        };
+//
+//        runnable.run();
 
-        runnable.run();
 
-
-//        TemplateSender templateSender=new TemplateSender();
-//        templateSender.send("192.168.38.179",9002,1800*1000,"rootgod","root");
+        TemplateSender templateSender=new TemplateSender();
+        templateSender.send("172.29.9.177",9002,1800*1000,"rootgod","root",1);
 
     }
 }

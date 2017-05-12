@@ -5,6 +5,8 @@ import org.dom4j.Document;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -22,6 +24,8 @@ import java.io.File;
 @SpringBootTest(classes = DemoApplication.class)
 @WebAppConfiguration()
 public class XMLServiceTest {
+    /** logger */
+    private static final Logger logger = LoggerFactory.getLogger(XMLServiceTest.class);
 
     @Resource
     private XMLService service;
@@ -43,7 +47,7 @@ public class XMLServiceTest {
     @Test
     public void getPath() throws Exception {
         String name=System.getProperties().getProperty("os.name");
-        System.out.println(name);
+        logger.info("name:"+name);
 
     }
 
