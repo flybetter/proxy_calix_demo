@@ -1,7 +1,8 @@
-package com.cn.calix.server;
+package com.cn.calix.server.Netty;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * Date: 2017/5/1
  * Time: 下午3:37
  */
-public class ProxyServerHandler extends ChannelInboundHandlerAdapter {
+public class ProxyServerHandler extends SimpleChannelInboundHandler<String> {
 
     private static Logger logger= LoggerFactory.getLogger(ProxyServerHandler.class);
 

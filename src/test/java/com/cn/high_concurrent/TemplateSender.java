@@ -84,17 +84,30 @@ public class TemplateSender {
 
     public static void main(String[] args) {
 
-        ExecutorService cacheService= Executors.newCachedThreadPool();
-        int i=0;
-        for (i =1; i <21; i++) {
-//            int a;
-//            cacheService.execute(()->{
-//        TemplateSender templateSender=new TemplateSender();
 
+        String ip="192.168.38.179";
+        //192.168.38.179
+
+
+        ExecutorService cacheService= Executors.newCachedThreadPool();
+//        for (int i =1; i <11; i++) {
+
+//            cacheService.execute((i)->{
+//        TemplateSender templateSender=new TemplateSender();
+//
 //        templateSender.send("192.168.38.179",9002,1800*1000,"rootgod","root" ,a);
 //            });
-            cacheService.execute(new TestThread(i));
-        }
+
+//            cacheService.execute(new TestThread(i,ip));
+//        }
+
+
+        Runnable runnable=()->{
+            System.out.println("111");
+        };
+
+        runnable.run();
+
 
 //        TemplateSender templateSender=new TemplateSender();
 //        templateSender.send("192.168.38.179",9002,1800*1000,"rootgod","root");

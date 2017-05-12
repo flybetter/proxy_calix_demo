@@ -10,15 +10,18 @@ public class TestThread implements Runnable {
 
     private int i=0;
 
-    public TestThread( int i) {
+    private String ip="";
+
+    public TestThread( int i,String ip) {
         this.i=i;
+        this.ip=ip;
     }
 
     @Override
     public void run() {
 
         TemplateSender templateSender=new TemplateSender();
-        templateSender.send("192.168.38.179",9002,1800*1000,"rootgod","root",i );
+        templateSender.send(this.ip,9002,1800*1000,"rootgod","root",i );
         //192.168.38.179
         //192.168.33.216
     }
