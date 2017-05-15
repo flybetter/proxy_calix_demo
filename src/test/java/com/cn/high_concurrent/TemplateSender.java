@@ -110,7 +110,7 @@ public class TemplateSender {
 
 
         TemplateSender templateSender=new TemplateSender();
-        templateSender.send("172.29.9.177",9002,1800*1000,"rootgod","root",1);
+        templateSender.send("127.0.0.1",9002,60*1000,"rootgod","root",1);
 
     }
 }

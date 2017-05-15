@@ -1,5 +1,6 @@
 package com.cn.calix.server.Netty;
 
+import com.cn.calix.server.service.CommonService;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
@@ -17,10 +18,13 @@ public class ProxyServerHandler extends SimpleChannelInboundHandler<String> {
     private static Logger logger= LoggerFactory.getLogger(ProxyServerHandler.class);
 
 
-
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
-        logger.info("channelRead receive:"+s.toString());
+        CommonService commonService=new CommonService(channelHandlerContext);
+        String keyInfo=commonService.getKeyInfo();
+        logger.info(keyInfo+" receive:"+s.toString());
+        String response=commonService.filter(s);
+        logger.info(keyInfo=" callback:"+response);
     }
 
     @Override

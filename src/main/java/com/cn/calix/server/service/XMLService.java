@@ -1,8 +1,10 @@
 package com.cn.calix.server.service;
 
 import com.cn.calix.server.dto.CMSServer;
+import com.cn.calix.server.dto.ProxyResult;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ public class XMLService {
 
     private Document document=null;
 
-    private String CLIENT_PATH="/ANASetting/clients/client";
+    private String CLIENT_LOCAL_PATH="/ANASetting/clients/client";
 
     //TODO
     public String getPath(){
@@ -74,7 +76,7 @@ public class XMLService {
         reader=new SAXReader();
         try {
             document=reader.read(file);
-            List<CMSServer> cmsServers=getValueByPath(document,CLIENT_PATH);
+            List<CMSServer> cmsServers=getValueByPath(document,CLIENT_LOCAL_PATH);
             CMSServerService.cmsServers=cmsServers;
             logger.info("loading xml successful cmsServers:"+cmsServers.toString());
         } catch (DocumentException e) {
@@ -89,6 +91,19 @@ public class XMLService {
             return  new CMSServer(e.elementText("ipaddress"),Integer.parseInt(e.elementText("port")));
         }).collect(Collectors.toList());
         return  cmsServers;
+    }
+
+    public ProxyResult getNameByRequest(String request){
+        request=request.replaceAll("\n","").replaceAll(".","");
+        try {
+            Document document=DocumentHelper.parseText(request);
+            String actionName=document.getRootElement().attributeValue("name");
+            return new ProxyResult(actionName,ProxyResult.SUCCESS);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+            logger.error("getNameByRequest",e);
+            return new ProxyResult(ProxyResult.FAIL,e.toString());
+        }
     }
 
 }
