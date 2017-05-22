@@ -44,13 +44,12 @@ public class Client {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Client client = (Client) o;
-
-        if (ip != null ? !ip.equals(client.ip) : client.ip != null) return false;
-        return port != null ? port.equals(client.port) : client.port == null;
+        if (o instanceof Client) {
+            Client client=(Client)o;
+            return (ip.equals(client.ip)&&port.equals(client.port));
+        }else {
+            return  super.equals(o);
+        }
     }
 
     @Override

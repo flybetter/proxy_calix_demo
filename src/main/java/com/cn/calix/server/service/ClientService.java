@@ -1,7 +1,6 @@
 package com.cn.calix.server.service;
 
 import com.cn.calix.server.dto.Client;
-import com.cn.calix.server.dto.Client_Server;
 import com.cn.calix.server.dto.ProxyResult;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -18,8 +17,6 @@ import java.util.List;
 public class ClientService {
 
     public static List<Client> clientList=new ArrayList<>();
-
-    public static List<Client_Server> client_serverList=new ArrayList<>();
 
     private String clientIp="";
 
@@ -46,24 +43,14 @@ public class ClientService {
 
 
     public ProxyResult checkClientList(){
-        if (this.clientList.stream().anyMatch(client -> client==new Client(clientIp,clientPort))){
-            return new ProxyResult(this.clientList.stream().filter(client -> client==new Client(clientIp,clientPort)).findFirst().get(),ProxyResult.SUCCESS);
+        if (this.clientList.stream().anyMatch(client -> client.equals(new Client(clientIp,clientPort)))){
+            return new ProxyResult(this.clientList.stream().filter(client -> client.equals(new Client(clientIp,clientPort))).findFirst().get(),ProxyResult.SUCCESS);
         }else {
             return new ProxyResult(CLIENTLIST_NOT_CLIENT,ProxyResult.FAIL);
         }
     }
 
-    public ProxyResult send(){
-        Client client=ClientService.clientList.stream().filter(client1 -> client1==new Client(clientIp,clientPort)).findFirst().get();
 
-        if (client == null) {
-
-        }
-
-//        CMSServerService cmsServerService =new CMSServerService();
-//        cmsServerService.send();
-        return  null;
-    };
 
 
 

@@ -12,7 +12,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 
 /**
  * Created with IntelliJ IDEA
@@ -55,5 +57,22 @@ public class XMLServiceTest {
     public void loadXML() throws Exception {
 
     }
+
+    @Test
+    public void getDeviceNameByRequest()throws Exception{
+        StringBuffer request=new StringBuffer();
+        BufferedReader bufferedReader=new BufferedReader(new FileReader("/Users/wubingyu/IdeaProjects/ANA/input/Sample.xml"));
+        String line="";
+        while ((line=bufferedReader.readLine())!=null){
+            request.append(line);
+        }
+        bufferedReader.close();
+        service.getDeviceNameByRequest(request.toString());
+    }
+
+
+
+
+
 
 }

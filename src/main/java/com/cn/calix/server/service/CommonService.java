@@ -30,13 +30,12 @@ public  class  CommonService {
     }
 
     public  String getKeyInfo (){
-        return  " IP: "+((InetSocketAddress)channelHandlerContext.channel().remoteAddress()).getAddress().getHostAddress()+" PORT"+ ((InetSocketAddress) channelHandlerContext.channel().remoteAddress()).getPort();
+        return  " IP: "+((InetSocketAddress)channelHandlerContext.channel().remoteAddress()).getAddress().getHostAddress()+" PORT: "+ ((InetSocketAddress) channelHandlerContext.channel().remoteAddress()).getPort();
     }
 
     public  String filter(String request){
         //login
         if (judge(LOGIN_PATTERN,request,((pattern, command) -> pattern.matcher(command).find()))) {
-            logger.info(this.getKeyInfo() +" ACTTION: login");
             CMSServerService cmsServerService=new CMSServerService(channelHandlerContext);
             ProxyResult result=cmsServerService.login(request);
             return checkProxyResult(result);
@@ -45,19 +44,25 @@ public  class  CommonService {
         //check login
         ClientService clientService=new ClientService(channelHandlerContext);
         ProxyResult result=clientService.checkClientList();
-        if (result.isSuccess()) {
-            XMLService xmlService=new XMLService();
-            ProxyResult proxyResult=xmlService.getNameByRequest(request);
-            if (proxyResult.isSuccess()){
-                //
-
-
-            }else{
-                return checkProxyResult(result);
-            }
-        }else{
+        if (!result.isSuccess()) {
             return checkProxyResult(result);
         }
+
+        //getActionByRequest
+        XMLService xmlService=new XMLService();
+        ProxyResult actionResult=xmlService.getActionByRequest(request);
+        if (!actionResult.isSuccess()) {
+            return checkProxyResult(actionResult);
+        }
+
+        CMSServerService cmsServerService=new CMSServerService(channelHandlerContext);
+        ProxyResult commandResult=cmsServerService.sendCommandByRequest(actionResult.getData().toString(),request);
+
+
+        //
+
+
+
 
         return null;
     };

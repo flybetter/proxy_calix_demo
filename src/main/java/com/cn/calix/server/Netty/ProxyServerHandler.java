@@ -23,8 +23,9 @@ public class ProxyServerHandler extends SimpleChannelInboundHandler<String> {
         CommonService commonService=new CommonService(channelHandlerContext);
         String keyInfo=commonService.getKeyInfo();
         logger.info(keyInfo+" receive:"+s.toString());
-        String response=commonService.filter(s);
-        logger.info(keyInfo=" callback:"+response);
+        String response=commonService.filter(s.trim());
+        logger.info(keyInfo+" callback:"+response);
+        channelHandlerContext.writeAndFlush(response+"\n.\n");
     }
 
     @Override

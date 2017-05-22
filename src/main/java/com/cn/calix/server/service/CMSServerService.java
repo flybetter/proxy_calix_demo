@@ -36,6 +36,12 @@ public class CMSServerService {
 
     private Integer clientPort=0;
 
+    private static final String ACTION_RUNWORKFLOW="RunWorkflow";
+
+    private static final String ACTION_GETWORKFLOWOUTPUT="GetWorkflowOutput";
+
+    private static final String NE_NOT_EXISTING="VNE Does Not Exist";
+
     public CMSServerService() {
 
     }
@@ -68,7 +74,7 @@ public class CMSServerService {
             Socket socket=new Socket(ip,port);
             BufferedReader in =new BufferedReader(new InputStreamReader(socket.getInputStream()));
             PrintWriter out=new PrintWriter(socket.getOutputStream());
-            out.println(command);
+            out.println(command+"\n.\n");
             out.flush();
             String line=null;
             StringBuffer response=new StringBuffer("");
@@ -87,7 +93,6 @@ public class CMSServerService {
     };
 
 
-
     public  ProxyResult checkLoginResponse(String response){
         if (response .contains(CMSSERVER_LOGIN_SUCCESS)) {
              ClientService.addClient(clientIp,clientPort);
@@ -98,6 +103,54 @@ public class CMSServerService {
     }
 
 
+    public ProxyResult sendCommandByRequest(String action,String request){
+
+        switch (action){
+           case ACTION_RUNWORKFLOW: return RunWorkFlow(request);
+           default: return new ProxyResult();
+        }
+    };
+
+    public ProxyResult RunWorkFlow(String request){
+        XMLService xmlService=new XMLService();
+        ProxyResult nameResult =xmlService.getDeviceNameByRequest(request);
+        if(!nameResult.isSuccess()){
+            return nameResult;
+        }
+        DeviceCMSServerService deviceCMSServerService=new DeviceCMSServerService();
+        ProxyResult cmsServerResult=deviceCMSServerService.getCMSServerByDeviceName(nameResult.getData().toString());
+        if (cmsServerResult.isSuccess()){
+            CMSServer cmsServer=(CMSServer) cmsServerResult.getData();
+            ProxyResult sendResult=this.send(cmsServer.getIp(),cmsServer.getPort(),request);
+            return sendResult;
+        }else{
+            for(CMSServer cmsServer:CMSServerService.cmsServers){
+                ProxyResult sendResult=this.send(cmsServer.getIp(),cmsServer.getPort(),request);
+                if (sendResult.isSuccess()&&!sendResult.getData().toString().equalsIgnoreCase(NE_NOT_EXISTING)){
+                    deviceCMSServerService.addDeviceName(cmsServer,nameResult.getData().toString());
+                    return sendResult;
+                }
+            }
+            return  new ProxyResult(ProxyResult.FAIL,NE_NOT_EXISTING);
+        }
+    }
+
+    public ProxyResult GetWorkflowOutput(String request){
+        XMLService xmlService=new XMLService();
+        ProxyResult nameResult =xmlService.getDeviceNameByRequest(request);
+        if(!nameResult.isSuccess()){
+            return nameResult;
+        }
+        DeviceCMSServerService deviceCMSServerService=new DeviceCMSServerService();
+        ProxyResult cmsServerResult=deviceCMSServerService.getCMSServerByDeviceName(nameResult.getData().toString());
+        if (cmsServerResult.isSuccess()){
+            CMSServer cmsServer=(CMSServer) cmsServerResult.getData();
+            ProxyResult sendResult=this.send(cmsServer.getIp(),cmsServer.getPort(),request);
+            return sendResult;
+        }else{
+            return new ProxyResult(ProxyResult.FAIL,NE_NOT_EXISTING);
+        }
+    }
 
 
 }

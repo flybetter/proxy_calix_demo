@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA
@@ -28,5 +29,7 @@ public class Example {
         Map<String,String> deviceNameMap=ANAProxyService.deviceNameMap;
         return deviceNameMap.toString();
     }
+
+    ConcurrentHashMap<String,String> map=new ConcurrentHashMap<>();
 
 }

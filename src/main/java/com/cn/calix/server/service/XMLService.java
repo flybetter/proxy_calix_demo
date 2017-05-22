@@ -44,6 +44,8 @@ public class XMLService {
 
     private String CLIENT_LOCAL_PATH="/ANASetting/clients/client";
 
+    private String COMMAND_PATH="/command/param/value/IWorkflowStringAttribute";
+
     //TODO
     public String getPath(){
 
@@ -93,8 +95,13 @@ public class XMLService {
         return  cmsServers;
     }
 
-    public ProxyResult getNameByRequest(String request){
-        request=request.replaceAll("\n","").replaceAll(".","");
+
+    /*
+     *TODO
+     *2017/5/22
+     *
+     */
+    public  ProxyResult getActionByRequest(String request){
         try {
             Document document=DocumentHelper.parseText(request);
             String actionName=document.getRootElement().attributeValue("name");
@@ -105,5 +112,21 @@ public class XMLService {
             return new ProxyResult(ProxyResult.FAIL,e.toString());
         }
     }
+
+
+    public ProxyResult getDeviceNameByRequest(String request){
+        try {
+            Document document=DocumentHelper.parseText(request);
+            List<Element> nodes=document.selectNodes(COMMAND_PATH);
+            Element element=nodes.stream().filter((e)-> e.element("ID").getText().contains("device_host_name")).findFirst().get();
+            return new ProxyResult(element.element("Value").getText(),ProxyResult.SUCCESS);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+            return new ProxyResult(ProxyResult.FAIL,e.toString());
+        }
+    };
+
+
+
 
 }
