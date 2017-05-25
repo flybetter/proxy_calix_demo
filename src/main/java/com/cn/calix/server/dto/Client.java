@@ -1,5 +1,7 @@
 package com.cn.calix.server.dto;
 
+import java.net.Socket;
+
 /**
  * Created with IntelliJ IDEA
  * Created By Bingyu wu
@@ -12,9 +14,29 @@ public class Client {
 
     private Integer port;
 
+    private String userName;
+
+    private CMSServer  cmsServer;
+
+    private Socket socket;
+
     public Client(String ip, Integer port) {
         this.ip = ip;
         this.port = port;
+    }
+
+    public Client(String ip, Integer port, String userName) {
+        this.ip = ip;
+        this.port = port;
+        this.userName = userName;
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 
     public String getIp() {
@@ -33,6 +55,21 @@ public class Client {
         this.port = port;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public CMSServer getCmsServer() {
+        return cmsServer;
+    }
+
+    public void setCmsServer(CMSServer cmsServer) {
+        this.cmsServer = cmsServer;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     @Override
     public String toString() {

@@ -1,5 +1,7 @@
 package com.cn.calix.server.function;
 
+import com.cn.calix.server.dto.ProxyResult;
+
 import java.util.regex.Pattern;
 
 /**
@@ -10,5 +12,5 @@ import java.util.regex.Pattern;
  */
 @FunctionalInterface
 public interface PatternFunction {
-    public boolean check (Pattern pattern, String command);
+    public ProxyResult check (Pattern pattern, String command);
 }

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.InetSocketAddress;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -25,6 +26,7 @@ public  class  CommonService {
 
     private ChannelHandlerContext channelHandlerContext;
 
+
     public CommonService(ChannelHandlerContext channelHandlerContext){
         this.channelHandlerContext=channelHandlerContext;
     }
@@ -35,8 +37,16 @@ public  class  CommonService {
 
     public  String filter(String request){
         //login
-        if (judge(LOGIN_PATTERN,request,((pattern, command) -> pattern.matcher(command).find()))) {
-            CMSServerService cmsServerService=new CMSServerService(channelHandlerContext);
+        ProxyResult loginResult=  judge(LOGIN_PATTERN,request,((pattern, command) -> {
+            Matcher matcher=pattern.matcher(command);
+            if (matcher.find()){
+                return new ProxyResult(matcher.group(1).trim(),ProxyResult.SUCCESS);
+            }else{
+                return new ProxyResult(ProxyResult.FAIL,request);
+            }
+        }));
+        if (loginResult.isSuccess()) {
+            CMSServerService cmsServerService=new CMSServerService(channelHandlerContext,loginResult.getData().toString());
             ProxyResult result=cmsServerService.login(request);
             return checkProxyResult(result);
         }
@@ -57,18 +67,11 @@ public  class  CommonService {
 
         CMSServerService cmsServerService=new CMSServerService(channelHandlerContext);
         ProxyResult commandResult=cmsServerService.sendCommandByRequest(actionResult.getData().toString(),request);
-
-
-        //
-
-
-
-
-        return null;
+        return  checkProxyResult(commandResult);
     };
 
 
-    public  boolean judge(Pattern pattern, String command, PatternFunction patternFunction){
+    public  ProxyResult judge(Pattern pattern, String command, PatternFunction patternFunction){
 
         return patternFunction.check(pattern,command);
 
