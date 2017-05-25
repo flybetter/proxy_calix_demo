@@ -57,12 +57,13 @@ public class DeviceCMSServerService {
 
 
     public void addDeviceName(CMSServer cmsServer, String deviceName){
-
-        for (Device_CMSServer device_cmsServer:device_cmsServers){
-            if (device_cmsServer.getCmsServer().equals(cmsServer)){
-                device_cmsServer.getDeviceSet().add(deviceName);
-            }
-        }
+       Device_CMSServer device_cmsServer= DeviceCMSServerService.device_cmsServers.stream().filter(e->e.getCmsServer().equals(cmsServer)).findFirst().get();
+       device_cmsServer.getDeviceSet().add(deviceName);
+//        for (Device_CMSServer device_cmsServer:device_cmsServers){
+//            if (device_cmsServer.getCmsServer().equals(cmsServer)){
+//                device_cmsServer.getDeviceSet().add(deviceName);
+//            }
+//        }
     }
 
 }

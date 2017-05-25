@@ -43,16 +43,19 @@ public class ClientService {
     }
 
     public static void updateClient(String clientIp, Integer clientPort, CMSServer cmsServer,Socket socket){
-        for (Client client:ClientService.clientList){
-            if (client.getIp().equals(clientIp)&&clientPort.equals(clientPort)){
-                Client temp=new Client(clientIp,clientPort,client.getUserName());
-                temp.setCmsServer(cmsServer);
-                temp.setSocket(socket);
-                ClientService.clientList.remove(client);
-                ClientService.clientList.add(temp);
-                break;
-            }
-        }
+        Client client=ClientService.clientList.stream().filter(client1 -> client1.equals(new Client(clientIp,clientPort))).findFirst().get();
+        client.setSocket(socket);
+        client.setCmsServer(cmsServer);
+//        for (Client client:ClientService.clientList){
+//            if (client.getIp().equals(clientIp)&&clientPort.equals(clientPort)){
+//                Client temp=new Client(clientIp,clientPort,client.getUserName());
+//                temp.setCmsServer(cmsServer);
+//                temp.setSocket(socket);
+//                ClientService.clientList.remove(client);
+//                ClientService.clientList.add(temp);
+//                break;
+//            }
+//        }
     }
 
 

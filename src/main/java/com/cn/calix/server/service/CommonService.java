@@ -24,6 +24,8 @@ public  class  CommonService {
     private static final String LOGIN_PATTERN_STR="user=(.*) password=(.*)";
     private static final Pattern LOGIN_PATTERN=Pattern.compile(LOGIN_PATTERN_STR);
 
+    private static final String SYNCDEVICE="syncdevice";
+
     private ChannelHandlerContext channelHandlerContext;
 
 
@@ -32,7 +34,7 @@ public  class  CommonService {
     }
 
     public  String getKeyInfo (){
-        return  " IP: "+((InetSocketAddress)channelHandlerContext.channel().remoteAddress()).getAddress().getHostAddress()+" PORT: "+ ((InetSocketAddress) channelHandlerContext.channel().remoteAddress()).getPort();
+        return  "Proxy(ip: "+((InetSocketAddress)channelHandlerContext.channel().remoteAddress()).getAddress().getHostAddress()+" port:"+ ((InetSocketAddress) channelHandlerContext.channel().remoteAddress()).getPort()+")";
     }
 
     public  String filter(String request){
@@ -51,6 +53,11 @@ public  class  CommonService {
             return checkProxyResult(result);
         }
 
+        //syndevice
+        if (SYNCDEVICE.equals(request)) {
+
+        }
+
         //check login
         ClientService clientService=new ClientService(channelHandlerContext);
         ProxyResult result=clientService.checkClientList();
@@ -65,6 +72,7 @@ public  class  CommonService {
             return checkProxyResult(actionResult);
         }
 
+        //send
         CMSServerService cmsServerService=new CMSServerService(channelHandlerContext);
         ProxyResult commandResult=cmsServerService.sendCommandByRequest(actionResult.getData().toString(),request);
         return  checkProxyResult(commandResult);

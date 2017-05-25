@@ -45,13 +45,12 @@ public class CMSServerService {
 
     private static final String ACTION_GETWORKFLOWOUTPUT="GetWorkflowOutput";
 
-    private static final String GETWORKFLOWOUTPUT="GetWorkflowOutput";
+    private static final String ACTION_CREATE="Create";
+
+    private static final String ACTION_DELETE="Delete";
 
     private static final String NE_NOT_EXISTING="VNE Does Not Exist";
 
-    public CMSServerService() {
-
-    }
 
     public CMSServerService(ChannelHandlerContext channelHandlerContext){
 
@@ -86,7 +85,7 @@ public class CMSServerService {
 
 
     public  ProxyResult send(String ip,Integer port,String command){
-        logger.info("send to CMS(ip:"+ip+" port:"+port+"):"+command);
+        logger.info("Proxy(ip:"+clientIp+" port"+clientPort+") send to CMS(ip:"+ip+" port:"+port+"):"+command);
         ProxyResult result=null;
 
         try{
@@ -105,7 +104,7 @@ public class CMSServerService {
                 }
                 response.append(line);
             }
-            logger.info("receive from CMS(ip:"+ip+" port:"+port+"):"+response.toString());
+            logger.info("Proxy(ip:"+clientIp+" port:"+clientPort+") receive from CMS(ip:"+ip+" port:"+port+"):"+response.toString());
             return new ProxyResult(response.toString(),ProxyResult.SUCCESS);
         } catch (IOException e) {
             e.printStackTrace();
@@ -147,7 +146,8 @@ public class CMSServerService {
 
         switch (action){
            case ACTION_RUNWORKFLOW: return RunWorkFlow(request);
-           case GETWORKFLOWOUTPUT: return GetWorkflowOutput(request);
+           case ACTION_GETWORKFLOWOUTPUT: return GetWorkflowOutput(request);
+           case ACTION_CREATE: return Create(request);
            default: return new ProxyResult(ProxyResult.FAIL,request);
         }
     };
@@ -190,8 +190,21 @@ public class CMSServerService {
         ProxyResult sendResult=this.send(client.getCmsServer().getIp(),client.getCmsServer().getPort(),request);
         ClientService.removeClient(clientIp,clientPort);
         return sendResult;
-
     }
+
+    public ProxyResult Create(String request){
+        CMSServer cmsServer=CMSServerService.cmsServers.stream().findFirst().get();
+        ProxyResult sendResult=this.send(cmsServer.getIp(),CMSServer.turnupToolPort,this.getRequestByProxy(request));
+        ClientService.removeClient(clientIp,clientPort);
+        if (sendResult.isSuccess()&&!sendResult.getData().toString().equalsIgnoreCase(NE_NOT_EXISTING)) {
+            return sendResult;
+        }else {
+            return new ProxyResult(ProxyResult.FAIL,sendResult.getData().toString()==null?sendResult.getError():sendResult.getData().toString());
+        }
+    };
+
+
+
 
 
 }

@@ -11,6 +11,10 @@ public class CMSServer {
     private String ip;
     private Integer port;
 
+    public final static int templatePort=9002;
+
+    public final static int turnupToolPort=9000;
+
     public CMSServer(String ip, Integer port) {
         this.ip = ip;
         this.port = port;
@@ -40,4 +44,20 @@ public class CMSServer {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof CMSServer) {
+            CMSServer cmsServer=(CMSServer)o;
+            return ip.equals(cmsServer.getIp())&&port.equals(cmsServer.getPort());
+        }else{
+            return  super.equals(o);
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = ip != null ? ip.hashCode() : 0;
+        result = 31 * result + (port != null ? port.hashCode() : 0);
+        return result;
+    }
 }
