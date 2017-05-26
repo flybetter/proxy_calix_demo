@@ -114,7 +114,7 @@ public class CMSServerService {
 
     };
 
-
+    @Deprecated
     public void closeSocket(BufferedReader in,PrintWriter out,Socket socket){
         try {
             if (in!=null){
